@@ -1,6 +1,6 @@
 # 💣 Minesweeper
 
-**[English](#english) | [Русский](#russian)**
+**🎮 [Play Now](https://drseedon.github.io/Minesweeper) | [English](#english) | [Русский](#russian)**
 
 ---
 
@@ -59,8 +59,8 @@ Modern web version of the classic Minesweeper game with AI solver, probabilistic
 
 1. **Clone the repository:**
 ```bash
-git clone https://github.com/yourusername/minesweeper.git
-cd minesweeper
+git clone https://github.com/drseedon/Minesweeper.git
+cd Minesweeper
 ```
 
 2. **Start local server:**
@@ -84,7 +84,7 @@ http://localhost:8000
 
 The game is automatically deployed to GitHub Pages:
 ```
-https://yourusername.github.io/minesweeper
+https://drseedon.github.io/Minesweeper
 ```
 
 ## 🎓 How to Play
@@ -238,8 +238,8 @@ Inspired by classic Windows Minesweeper and modern web technologies.
 
 1. **Клонируй репозиторий:**
 ```bash
-git clone https://github.com/yourusername/minesweeper.git
-cd minesweeper
+git clone https://github.com/drseedon/Minesweeper.git
+cd Minesweeper
 ```
 
 2. **Запусти локальный сервер:**
@@ -263,7 +263,7 @@ http://localhost:8000
 
 Игра автоматически деплоится на GitHub Pages:
 ```
-https://yourusername.github.io/minesweeper
+https://drseedon.github.io/Minesweeper
 ```
 
 ## 🎓 Как играть
