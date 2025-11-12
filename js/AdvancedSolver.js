@@ -38,12 +38,14 @@ export class AdvancedSolver {
 
         if (safeMoves.length > 0) {
             const unique = this.removeDuplicates(safeMoves);
-            return { type: 'reveal', row: unique[0].row, col: unique[0].col, probability: 0 };
+            const closest = this.findClosestToRevealed(unique);
+            return { type: 'reveal', row: closest.row, col: closest.col, probability: 0 };
         }
 
         if (mineMoves.length > 0) {
             const unique = this.removeDuplicates(mineMoves);
-            return { type: 'flag', row: unique[0].row, col: unique[0].col, probability: 1 };
+            const closest = this.findClosestToRevealed(unique);
+            return { type: 'flag', row: closest.row, col: closest.col, probability: 1 };
         }
 
         return null;
@@ -57,6 +59,38 @@ export class AdvancedSolver {
             seen.add(key);
             return true;
         });
+    }
+
+    findClosestToRevealed(cells) {
+        if (cells.length === 0) return null;
+        if (cells.length === 1) return cells[0];
+
+        let minDistance = Infinity;
+        let closestCell = cells[0];
+
+        // Для каждой ячейки-кандидата найти минимальное расстояние до открытых
+        for (const cell of cells) {
+            let cellMinDist = Infinity;
+
+            // Проверяем расстояние до всех открытых ячеек
+            for (let row = 0; row < this.board.rows; row++) {
+                for (let col = 0; col < this.board.cols; col++) {
+                    if (this.board.revealed[row][col]) {
+                        // Манхэттенское расстояние
+                        const dist = Math.abs(cell.row - row) + Math.abs(cell.col - col);
+                        cellMinDist = Math.min(cellMinDist, dist);
+                    }
+                }
+            }
+
+            // Если эта ячейка ближе, выбираем её
+            if (cellMinDist < minDistance) {
+                minDistance = cellMinDist;
+                closestCell = cell;
+            }
+        }
+
+        return closestCell;
     }
 
     calculateProbabilities() {
@@ -173,12 +207,25 @@ export class AdvancedSolver {
 
         if (bestMoves.length === 0) return null;
 
-        const corners = bestMoves.filter(m => 
-            (m.row === 0 || m.row === this.board.rows - 1) &&
-            (m.col === 0 || m.col === this.board.cols - 1)
-        );
+        // Если есть только одна ячейка, выбираем её
+        if (bestMoves.length === 1) {
+            return { type: 'reveal', row: bestMoves[0].row, col: bestMoves[0].col, probability: minProb };
+        }
 
-        const selected = corners.length > 0 ? corners[0] : bestMoves[0];
+        // Приоритет углам если вероятность высокая (нет открытых клеток рядом)
+        if (minProb > 0.3) {
+            const corners = bestMoves.filter(m => 
+                (m.row === 0 || m.row === this.board.rows - 1) &&
+                (m.col === 0 || m.col === this.board.cols - 1)
+            );
+            if (corners.length > 0) {
+                const selected = this.findClosestToRevealed(corners);
+                return { type: 'reveal', row: selected.row, col: selected.col, probability: minProb };
+            }
+        }
+
+        // Иначе выбираем ближайшую к открытым
+        const selected = this.findClosestToRevealed(bestMoves);
         return { type: 'reveal', row: selected.row, col: selected.col, probability: minProb };
     }
 
