@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>💣 Minesweeper</title>
+    <link rel="stylesheet" href="css/main.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="stats-panel stats-ai">
+                <div class="stats-header">
+                    <h3>🤖 AI Stats</h3>
+                    <button class="btn-clear-stats" id="clearAiStats" data-tooltip="Clear AI statistics">🗑️</button>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Wins:</span>
+                    <span class="stat-val" id="aiWins">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Losses:</span>
+                    <span class="stat-val" id="aiLosses">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Win Rate:</span>
+                    <span class="stat-val" id="aiWinRate">0%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Avg Time:</span>
+                    <span class="stat-val" id="aiAvgTime">0s</span>
+                </div>
+            </div>
+            
+            <div class="header-center">
+                <h1>💣 Minesweeper</h1>
+                <div class="controls">
+                <div class="difficulty-selector">
+                    <button class="btn-difficulty active" data-difficulty="easy" data-tooltip="Beginner: 9x9 grid, 10 mines (12%)">Easy<span>9x9</span></button>
+                    <button class="btn-difficulty" data-difficulty="medium" data-tooltip="Intermediate: 16x16 grid, 40 mines (16%)">Medium<span>16x16</span></button>
+                    <button class="btn-difficulty" data-difficulty="hard" data-tooltip="Advanced: 16x30 grid, 99 mines (21%)">Hard<span>16x30</span></button>
+                    <button class="btn-difficulty" data-difficulty="expert" data-tooltip="Expert: 20x44 grid, 220 mines (25%)">Expert<span>20x44</span></button>
+                    <button class="btn-difficulty" data-difficulty="custom" data-tooltip="Create your own custom game size">Custom<span>⚙️</span></button>
+                </div>
+                <div class="custom-settings" id="customSettings">
+                    <div class="custom-input">
+                        <label>Rows</label>
+                        <div class="input-control">
+                            <div class="control-column">
+                                <button class="btn-minmax" data-target="customRows" data-action="min">MIN</button>
+                                <button class="btn-control" data-target="customRows" data-action="decrease">-</button>
+                            </div>
+                            <input type="text" id="customRows" value="10">
+                            <div class="control-column">
+                                <button class="btn-minmax" data-target="customRows" data-action="max">MAX</button>
+                                <button class="btn-control" data-target="customRows" data-action="increase">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="custom-input">
+                        <label>Cols</label>
+                        <div class="input-control">
+                            <div class="control-column">
+                                <button class="btn-minmax" data-target="customCols" data-action="min">MIN</button>
+                                <button class="btn-control" data-target="customCols" data-action="decrease">-</button>
+                            </div>
+                            <input type="text" id="customCols" value="10">
+                            <div class="control-column">
+                                <button class="btn-minmax" data-target="customCols" data-action="max">MAX</button>
+                                <button class="btn-control" data-target="customCols" data-action="increase">+</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="custom-input">
+                        <label>Mines <span class="mines-percent" id="minesPercent">15%</span></label>
+                        <div class="input-control">
+                            <div class="control-column">
+                                <button class="btn-minmax" data-target="customMines" data-action="min">MIN</button>
+                                <button class="btn-control" data-target="customMines" data-action="decrease">-</button>
+                            </div>
+                            <input type="text" id="customMines" value="15">
+                            <div class="control-column">
+                                <button class="btn-minmax" data-target="customMines" data-action="max">MAX</button>
+                                <button class="btn-control" data-target="customMines" data-action="increase">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="start-group">
+                    <button class="btn-start" id="startBtn" data-tooltip="Start a new game">Start</button>
+                    <label class="toggle-switch small" data-tooltip="Instantly reveal all zero cells at game start">
+                        <input type="checkbox" id="quickStartToggle">
+                        <span class="toggle-slider small"></span>
+                        <span class="toggle-label">⚡ Quick</span>
+                    </label>
+                    <label class="toggle-switch small" data-tooltip="Automatically restart after game ends">
+                        <input type="checkbox" id="autoRestartToggle">
+                        <span class="toggle-slider small"></span>
+                        <span class="toggle-label">🔄 Auto</span>
+                    </label>
+                </div>
+            </div>
+            <div class="game-stats">
+                <div class="stat">
+                    <span class="stat-icon">💣</span>
+                    <span class="stat-value" id="minesCount">10</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-icon">⏱️</span>
+                    <span class="stat-value" id="timer">000</span>
+                </div>
+                <div class="stat">
+                    <span class="stat-icon">🚩</span>
+                    <span class="stat-value" id="flagsCount">0</span>
+                </div>
+            </div>
+
+            <div class="solver-controls">
+                <label class="toggle-switch" data-tooltip="AI solver with probabilistic analysis">
+                    <input type="checkbox" id="autoSolveToggle">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">🤖 Auto</span>
+                </label>
+                <label class="toggle-switch" data-tooltip="AI solver that only makes 100% safe moves">
+                    <input type="checkbox" id="safeAutoToggle">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">🛡️ Safe</span>
+                </label>
+                <button class="btn-step" id="stepBtn" data-tooltip="Execute one AI solver step">🔍 Step</button>
+                <div class="delay-control" data-tooltip="Delay between AI solver moves">
+                    <label for="delaySlider">⏱️ <span id="delayValue">200</span>ms</label>
+                    <input type="range" id="delaySlider" min="0" max="1000" value="200" step="50">
+                </div>
+                <label class="toggle-switch" data-tooltip="Show mine probability for each unrevealed cell">
+                    <input type="checkbox" id="probabilityToggle">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">📊 %</span>
+                </label>
+                <label class="toggle-switch" data-tooltip="Show remaining mines count for revealed numbers">
+                    <input type="checkbox" id="advancedToggle">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">🧠 Advanced</span>
+                </label>
+                <label class="toggle-switch" data-tooltip="See mines through unrevealed cells">
+                    <input type="checkbox" id="xrayToggle">
+                    <span class="toggle-slider"></span>
+                    <span class="toggle-label">👁️ X-Ray</span>
+                </label>
+            </div>
+            </div>
+            
+            <div class="stats-panel stats-player">
+                <div class="stats-header">
+                    <h3>👤 Player Stats</h3>
+                    <button class="btn-clear-stats" id="clearPlayerStats" data-tooltip="Clear player statistics">🗑️</button>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Wins:</span>
+                    <span class="stat-val" id="playerWins">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Losses:</span>
+                    <span class="stat-val" id="playerLosses">0</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Win Rate:</span>
+                    <span class="stat-val" id="playerWinRate">0%</span>
+                </div>
+                <div class="stat-row">
+                    <span class="stat-label">Avg Time:</span>
+                    <span class="stat-val" id="playerAvgTime">0s</span>
+                </div>
+            </div>
+        </header>
+
+        <main class="game-container">
+            <div id="gameBoard" class="game-board"></div>
+            <div class="game-overlay" id="gameOverlay">
+                <div class="overlay-content">
+                    <h2 id="overlayTitle">🎉 Victory!</h2>
+                    <p id="overlayMessage">You cleared the field!</p>
+                    <div class="overlay-buttons">
+                        <button class="btn-overlay btn-close" id="closeOverlayBtn">Close</button>
+                        <button class="btn-overlay btn-restart" id="playAgainBtn">New Game</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+    
+    <script type="module" src="js/main.js"></script>
+</body>
+</html>
+

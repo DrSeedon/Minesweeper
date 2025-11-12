@@ -1,0 +1,120 @@
+.cell {
+    width: 40px;
+    height: 40px;
+    background: var(--cell-bg);
+    border: none;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: var(--text);
+    transition: all 0.15s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.cell:hover:not(.revealed):not(.flagged) {
+    background: var(--cell-hover);
+    transform: scale(1.05);
+}
+
+.cell.revealed {
+    background: var(--cell-revealed);
+    cursor: default;
+    box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.5);
+}
+
+.cell.flagged {
+    background: var(--secondary);
+}
+
+.cell.mine {
+    background: var(--accent);
+    animation: explode 0.5s ease;
+}
+
+body.xray-mode .cell:not(.revealed):not(.flagged)::after {
+    content: attr(data-xray);
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    opacity: 0.2;
+    pointer-events: none;
+}
+
+.cell[data-count="1"] { color: #00bfff; }
+.cell[data-count="2"] { color: #06ffa5; }
+.cell[data-count="3"] { color: #ffcc00; }
+.cell[data-count="4"] { color: #ff6b35; }
+.cell[data-count="5"] { color: #ff006e; }
+.cell[data-count="6"] { color: #8338ec; }
+.cell[data-count="7"] { color: #f72585; }
+.cell[data-count="8"] { color: #d90429; }
+
+.cell-probability {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    pointer-events: none;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+.cell.prob-safe {
+    background: linear-gradient(135deg, #06ffa5 0%, #00d4aa 100%) !important;
+    box-shadow: 0 0 15px rgba(6, 255, 165, 0.6);
+}
+
+.cell.prob-mine {
+    background: linear-gradient(135deg, #ff006e 0%, #e94560 100%) !important;
+    box-shadow: 0 0 15px rgba(233, 69, 96, 0.6);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+.cell.solver-error {
+    border: 3px solid #ffcc00 !important;
+    box-shadow: 0 0 20px rgba(255, 204, 0, 0.8), inset 0 0 10px rgba(255, 204, 0, 0.3);
+    animation: errorPulse 1s ease-in-out infinite;
+    position: relative;
+    z-index: 100;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
+@keyframes errorPulse {
+    0%, 100% { 
+        box-shadow: 0 0 20px rgba(255, 204, 0, 0.8), inset 0 0 10px rgba(255, 204, 0, 0.3);
+    }
+    50% { 
+        box-shadow: 0 0 30px rgba(255, 204, 0, 1), inset 0 0 15px rgba(255, 204, 0, 0.5);
+    }
+}
+
+body.advanced-mode .cell.revealed:not(.mine)::before {
+    content: attr(data-remaining);
+    position: absolute;
+    font-size: 1.2rem;
+    font-weight: 700;
+    z-index: 2;
+}
+
+body.advanced-mode .cell.revealed:not(.mine)::after {
+    content: attr(data-original);
+    position: absolute;
+    bottom: 2px;
+    right: 3px;
+    font-size: 0.6rem;
+    opacity: 0.4;
+    font-weight: 600;
+    z-index: 1;
+}
+

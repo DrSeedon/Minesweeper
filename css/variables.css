@@ -1,0 +1,15 @@
+:root {
+    --bg-gradient-start: #1a1a2e;
+    --bg-gradient-end: #16213e;
+    --primary: #0f3460;
+    --secondary: #533483;
+    --accent: #e94560;
+    --success: #06ffa5;
+    --text: #ffffff;
+    --text-dim: #a8b2d1;
+    --cell-bg: #4a5089;
+    --cell-revealed: #1a1d35;
+    --cell-hover: #5a61a0;
+    --border: #4a5089;
+}
+
